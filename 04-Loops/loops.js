@@ -71,3 +71,63 @@ function paramifyObjectKeys(obj) {
   objArr.sort((a, b) => (a < b ? -1 : 1));
   return objArr.join('&');
 }
+
+/* 
+** code works but doesnt output in the expected order for tests to pass
+function renameFiles(files) {
+  filesObj = {};
+  let newFiles = [];
+  files.forEach(file => {
+    if (filesObj[file]) {
+      filesObj[file]++;
+    } else {
+      filesObj[file] = 1;
+    }
+  });
+  for (let file in filesObj) {
+    let n = 1;
+    let newFile = getNewFileName(file, n);
+    for (let i = 0; i < filesObj[file]; i++) {
+      debugger;
+      if (i === 0) {
+        newFiles.push(file);
+      } else {
+        while (filesObj[newFile] || newFiles.indexOf(newFile) > -1) {
+          n += 1;
+          newFile = getNewFileName(file, n);
+        }
+        newFiles.push(newFile);
+      }
+    }
+  }
+  console.log(newFiles.indexOf('a(2)'));
+  return newFiles;
+} */
+
+// accepted solution, will output incorrect naming if the order of the input array is varied.
+// example:
+// files = [a, a, a(1)] => [ 'a', 'a(1)', 'a(1)(1)' ]
+function renameFiles(files) {
+  const newFiles = [];
+  for (let i = 0; i < files.length; i++) {
+    debugger;
+    if (newFiles.indexOf(files[i]) < 0) {
+      newFiles.push(files[i]);
+    } else {
+      let n = 1;
+      let newFile = getNewFileName(files[i], n);
+      while (newFiles.indexOf(newFile) > -1) {
+        n += 1;
+        newFile = getNewFileName(files[i], n);
+      }
+      newFiles.push(newFile);
+    }
+  }
+  return newFiles;
+}
+
+const getNewFileName = (file, n) => {
+  return `${file}(${n})`;
+};
+
+console.log(renameFiles(['a', 'a', 'a(1)']));
